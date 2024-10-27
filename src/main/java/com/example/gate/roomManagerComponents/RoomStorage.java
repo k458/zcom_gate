@@ -1,9 +1,11 @@
 package com.example.gate.roomManagerComponents;
 
+import static com.example.gate.Strings.sb;
+
 public class RoomStorage {
-    private final StringBuilder sb = new StringBuilder("");
+
     private final String[] addresses;
-    private int nextId = 0;
+    private int nextIndex = 0;
     private boolean isFull;
 
     public RoomStorage(int size){
@@ -13,47 +15,41 @@ public class RoomStorage {
     {
         return addresses.length;
     }
-    public String getRoomIdByIndex(int index)
+    public String getRoomNameByIndex(int index)
     {
         if (index < 0 || index > addresses.length - 1) return null;
         return addresses[index];
     }
-    public String getNextId()
+    public String getNextRoomName()
     {
         if (isFull) return  null;
         sb.setLength(0);
         sb.append('R');
-        sb.append(nextId);
+        sb.append(nextIndex);
         return sb.toString();
     }
-    public void AddRoom(String address){
+    public void AddRoom(String roomName){
         if (isFull) {
             System.out.println("Failed to add room: storage is full.");
         }
         else {
-            addresses[nextId] = address;
+            addresses[nextIndex] = roomName;
             updateNextId();
         }
     }
-    public void DeleteRoom(String roomId)
+    public void DeleteRoom(String roomName)
     {
-        int id = roomId2Id(roomId);
+        int id = roomId2Id(roomName);
         if (id < 0 || id > addresses.length - 1) return;
         addresses[id] = null;
-        nextId = id;
+        nextIndex = id;
         isFull = false;
-    }
-    public String getRoomAddress(String roomId)
-    {
-        int id = roomId2Id(roomId);
-        if (id < 0 || id > addresses.length - 1) return null;
-        return addresses[id];
     }
     private void updateNextId()
     {
         for (int i = 0; i < addresses.length; i++) {
             if (addresses[i] == null){
-                nextId = i;
+                nextIndex = i;
                 return;
             }
         }

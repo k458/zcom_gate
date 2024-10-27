@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 public class GateController {
     private final RestTemplate restTemplate;
     private final RoomManager roomManager = new RoomManager();
+    private final StringBuilder sb = new StringBuilder();
 
     @Autowired
     public GateController(RestTemplate restTemplate)
@@ -18,33 +19,30 @@ public class GateController {
         this.restTemplate = restTemplate;
     }
 
-    @GetMapping("/hello")
+    @GetMapping("/h")
     public String sayHello() {
         return "Hello from Gate";
     }
-    @GetMapping("/helloRoom")
-    public String sayHelloFromRoom() {
-        String roomUrl = "http://room:8080/api/hello";
-        ResponseEntity<String> response = restTemplate.getForEntity(roomUrl, String.class);
-        String ret = response.getBody();
-        return ret;
-    }
-    @GetMapping("/createNewRoom")
+    @GetMapping("/newRoom")
     public String createNewRoom() {
-        String roomId = roomManager.createRoom();
-        if (roomId != null)
+        String roomName = roomManager.createRoom();
+        if (roomName != null)
         {
-            return "Created room with ID: " + roomId;
+            return "Created room with name: " + roomName;
         }
         return "Failed to create new room";
     }
-    @GetMapping("/getFirstRoomId")
-    public String getFirstRoomId() {
-        String roomId = roomManager.getFirstRoomName();
-        if (roomId != null)
+    @GetMapping("/hfr")
+    public String helloFirstRoom() {
+        String roomName = "R0";
+        String port = roomManager.getPortByName(roomName);
+        if (port != null)
         {
-            return roomId;
+            sb.setLength(0);
+            sb.append("http://localhost:").append(port).append("/api/hello");
+            ResponseEntity<String> response = restTemplate.getForEntity(sb.toString(), String.class);
+            return  response.getBody();
         }
-        return "First room is null";
+        return "R0 is null";
     }
 }
