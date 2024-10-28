@@ -32,12 +32,13 @@ public class RoomManager {
             String roomName = sb.toString();
             System.out.println("\twith name: " + roomName);
             int exposedPort = 8080;
-            int localPort = 8081+emptyIndex;
+            int localPort = 8082+emptyIndex;
             sb.setLength(0);
             sb.append(localPort).append(':').append(exposedPort);
             String portBinding = sb.toString();
             CreateContainerResponse roomContainer = dockerClient.createContainerCmd(roomContainerImageName)
                     .withName(roomName)
+                    .withNetworkMode("zcom-back-network")
                     .withExposedPorts(ExposedPort.tcp(exposedPort))
                     .withPortBindings(new Ports(PortBinding.parse(portBinding)))
                     .exec();

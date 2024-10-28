@@ -39,7 +39,8 @@ public class GateController {
         if (port != null)
         {
             sb.setLength(0);
-            sb.append("http://localhost:").append(port).append("/api/hello");
+            sb.append("http://R0:").append("8080").append("/api/hello");
+            System.out.println("Attempting: " + sb.toString());
             ResponseEntity<String> response = restTemplate.getForEntity(sb.toString(), String.class);
             return  response.getBody();
         }
